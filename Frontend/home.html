@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="./dist/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./src/script.js" defer></script>
+
+    <style>
+      .dltBtn {
+        color: #ef4444;
+        background: transparent;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .strike{
+        width: auto;
+        color: gray;
+        text-decoration: line-through;
+      }
+    </style>
+</head>
+<body class="bg-white flex justify-center items-start h-screen w-screen ">
+    <div class="min-h-[60%] h-auto w-2/5 bg-gray-100 border-2 rounded-md p-3 m-2 flex flex-col justify-start items-center">
+      <h2 class="text-2xl font-bold">Todo App</h2>
+      <br>
+      <div class="flex justify-center items-center w-full">
+        <input type="text" id="inpTodo" placeholder="Add a new todo" class="w-4/5 m-3 pl-3 mr-0 py-2">
+        <button class="bg-blue-700 rounded-tr-md rounded-br-md p-2 w-auto h-4/5 text-white" id="addTodo">Add</button>
+      </div>
+
+      <h2 class="text-xl font-semibold">Todos:</h2>
+      <p class="flex justify-center text-gray-500" id="statusText"></p>
+      <ul id="todos" class="flex-grow w-4/5 px-2">
+      </ul>
+
+      <p class="mt-8 remainingTodo"></p>
+
+      <button class="text-md bg-red-700 mt-3 p-2 rounded text-white" id="logout">Logout</button>
+    </div>
+</body>
+</html>

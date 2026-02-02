@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="./dist/output.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./src/script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body class="bg-gray-200 justify-center flex items-center h-screen w-screen relative">
+    <form class="h-3/5 w-[25rem] bg-white border-2 rounded-md p-6 m-2 flex flex-col justify-center items-center">
+        <h2 class="text-2xl font-bold">Signup</h2>
+        <br>
+        <label for="username" class="self-start font-semibold">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter your username" class="border-2 border-gray-300 rounded m-1 p-2 w-full">
+        <br>
+        <label for="email" class="self-start font-semibold">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" class="border-2 border-gray-300 rounded m-1 p-2 w-full">
+        <br>
+        <label for="password" class="self-start font-semibold">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" class="border-2 border-gray-300 rounded m-1 p-2 w-full">
+
+        <Button id="signup" class="bg-blue-700 text-white m-3 p-2 rounded-xl w-full">Signup</Button>
+        <p>Already have an Account? <a href="index.html" class="text-blue-900">Login</a></p>
+    </form>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="./dist/output.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./src/script.js" defer></script>
+</head>
+<body class="bg-gray-200 flex justify-center items-center h-screen w-screen">
+    <div class="h-[50%] w-[25rem] bg-white border-2 rounded-md p-6 m-2 flex flex-col justify-center items-center">
+        <h2 class="text-2xl font-bold">Login</h2>
+        <br>
+        <label for="email" class="self-start font-semibold">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" class="border-2 border-gray-300 rounded m-1 p-2 w-full">
+        <br>
+        <label for="password" class="self-start font-semibold">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter your password" class="border-2 border-gray-300 rounded m-1 p-2 w-full">
+
+        <Button id="login" class="bg-blue-700 text-white m-3 p-2 rounded-xl w-full">Login</Button>
+        <p>New User? <a href="signup.html" class="text-blue-900">Signup</a></p>
+    </div>
+</body>
+</html>
