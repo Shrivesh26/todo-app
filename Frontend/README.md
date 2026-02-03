@@ -97,7 +97,22 @@ module.exports = {
 
 #### 1️⃣ Generate Tailwind CSS:
 
-npx tailwindcss -i ./src/input.css -o ./dist/output.css
+npm run build 
+**OR**
+npx tailwindcss -i ./src/input.css -o ./dist/output.css --watch
 
 
-#### 2️⃣ Open index.html using Live Server
+#### 2️⃣ Open `index.html` on **localhost** using Live Server
+
+To run the frontend specifically on **localhost**, follow these steps:
+
+1. Open the **Frontend** folder in **Visual Studio Code**.
+2. Install the **Live Server** extension (by Ritwick Dey) if it’s not already installed.
+3. Open **VS Code Settings**:
+   - Press `Ctrl + ,`
+   - Search for **Live Server › Settings: Host**
+4. Set the host value to:
+5. Now right-click on `index.html`.
+6. Select **“Open with Live Server”**.
+
+The application will open in your browser at: **http://localhost:5500/**
