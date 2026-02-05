@@ -85,4 +85,80 @@ const logoutUser = async (req,res)=>{
   }
 }
 
-module.exports= {loginUser, registerUser, logoutUser};
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email)
+      return res.status(400).json({ message: "Email required" });
+
+    const user = await User.findOne({ email });
+    if (!user)
+      return res.status(400).json({ message: "Email not registered" });
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+
+    user.resetOTP = otp;
+    user.resetOTPExpiry = Date.now() + 60 * 1000; // 1 minute
+    await user.save();
+
+    console.log("OTP:", otp); // later send via email
+
+    return res.status(200).json({
+      message: "OTP sent to email"
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const verifyOTP = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email }).select("+resetOTP resetOTPExpiry")
+;
+
+    if (!user)
+      return res.status(400).json({ message: "Invalid request" });
+
+    if (
+      user.resetOTP !== otp ||
+      user.resetOTPExpiry < Date.now()
+    ) {
+      return res.status(400).json({ message: "Invalid or expired OTP" });
+    }
+
+    return res.status(200).json({ message: "OTP verified" });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body;
+
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user)
+      return res.status(400).json({ message: "Invalid request" });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    user.resetOTP = undefined;
+    user.resetOTPExpiry = undefined;
+
+    await user.save();
+
+    return res.status(200).json({ message: "Password updated successfully" });
+
+  } catch (error) {
+    return res.status(500).json({ message: "Server error" });
+  }
+};
+
+module.exports= {loginUser, registerUser, logoutUser, forgotPassword, verifyOTP, resetPassword};

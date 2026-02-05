@@ -199,7 +199,6 @@ if (todoInput) {
 if(logoutBtn){
   logoutBtn.addEventListener("click", async ()=>{
     await axios.get("http://localhost:4001/user/logout",{withCredentials:true});
-    localStorage.removeItem("jwt");
     showSuccessMessage("Logged Out", "Successfully logged out", 1500, "index.html");
     setTimeout(()=>{ window.location.href = "index.html"; },1500);
   })
@@ -248,7 +247,6 @@ async function signup(username, email, password) {
     const user = await axios.post("http://localhost:4001/user/register",{
       username, email, password
     }, {withCredentials : true} );
-    // localStorage.setItem("jwt",user.data.token)
 
     if (user.status === 200 || user.data?.success) {
       showSuccessMessage("Registration Successful","Your account has been created successfully.",2500, "index.html");
@@ -334,11 +332,377 @@ async function login(email, password) {
       { withCredentials: true }
     );
     console.log("frontend",data);
-    localStorage.setItem("jwt",data.token)
     showSuccessMessage("Logged In", "Successfully", 2000, "home.html");
   } catch (error) {
     console.error("Login failed:", error.response?.data || error.message);
     const msg = error?.response?.data?.message || error.message || "Login failed";
     showUnsuccessMessage("Login failed", msg, 2000);
   }
+}
+
+
+
+// // ====================================================================================
+// // Elements
+// const otpBtn = document.querySelector("#otpBtn");
+// const emailInput = document.querySelector("#emailInput");
+// const otpSection = document.querySelector("#otpSection");
+// const resendBtn = document.querySelector("#resendBtn");
+// const timerEl = document.querySelector("#timer");
+// const verifyBtn = document.querySelector("#verifyBtn");
+
+// // OTP input (inside otpSection)
+// const otpInput = otpSection?.querySelector("input");
+
+// let timerInterval;
+// let timeLeft = 60;
+
+// /* =========================
+//    SEND OTP
+// ========================= */
+// if (otpBtn) {
+//   otpBtn.addEventListener("click", async (e) => {
+//     e.preventDefault();
+
+//     const email = emailInput.value.trim();
+//     if (!email) return alert("Email is required");
+
+//     try {
+//       const { data } = await axios.post(`http://localhost:4001/user/forgot`, { email });
+
+//       alert(data.message);
+
+//       // Show OTP section
+//       otpSection.classList.remove("hidden");
+
+//       otpBtn.classList.add("hidden");
+//       verifyBtn.classList.remove("hidden");      
+
+//       startTimer();
+
+//       // Switch button behavior to verify OTP
+//       verifyBtn.onclick = verifyOTP;
+
+//     } catch (err) {
+//       alert(err.response?.data?.message || "Failed to send OTP");
+//     }
+//   });
+// }
+
+// /* =========================
+//    VERIFY OTP
+// ========================= */
+// async function verifyOTP(e) {
+//   e.preventDefault();
+
+//   const email = emailInput.value.trim();
+//   const otp = otpInput.value.trim();
+
+//   if (!otp || otp.length !== 6) {
+//     return alert("Enter a valid 6-digit OTP");
+//   }
+
+//   try {
+//     const { data } = await axios.post(`http://localhost:4001/user/verify-otp`, {
+//       email,
+//       otp: otp.toString() // 🔴 IMPORTANT
+//     });
+
+//     alert(data.message);
+
+//     // 👉 redirect later
+//     localStorage.setItem("resetEmail",email);
+//     window.location.href = "reset-password.html";
+
+//   } catch (err) {
+//     alert(err.response?.data?.message || "OTP verification failed");
+//   }
+// }
+
+// /* =========================
+//    RESEND OTP
+// ========================= */
+// async function resendOTP() {
+//   const email = emailInput.value.trim();
+//   if (!email) return alert("Email required");
+
+//   try {
+//     const { data } = await axios.post(`http://localhost:4001/user/forgot`, { email });
+
+//     alert("OTP resent successfully");
+//     startTimer();
+//   } catch (err) {
+//     alert(err.response?.data?.message || "Failed to resend OTP");
+//   }
+// }
+
+// // Make resendOTP global (because HTML uses onclick)
+// window.resendOTP = resendOTP;
+
+// /* =========================
+//    TIMER LOGIC
+// ========================= */
+// function startTimer() {
+//   clearInterval(timerInterval);
+//   timeLeft = 60;
+
+//   resendBtn.disabled = true;
+//   resendBtn.classList.add("cursor-not-allowed");
+//   timerEl.textContent = timeLeft;
+
+//   timerInterval = setInterval(() => {
+//     timeLeft--;
+//     timerEl.textContent = timeLeft;
+
+//     if (timeLeft <= 0) {
+//       clearInterval(timerInterval);
+//       resendBtn.disabled = false;
+//       resendBtn.classList.remove("cursor-not-allowed");
+//       timerEl.textContent = "0";
+//     }
+//   }, 1000);
+// }
+
+
+// // ====================================================================================
+// const resetBtn = document.querySelector("#resetBtn");
+// const newPassword = document.querySelector("#newPassword");
+// const confirmPassword = document.querySelector("#confirmPassword");
+
+// // ✅ Run ONLY if reset-password page elements exist
+// if (resetBtn && newPassword && confirmPassword) {
+
+//   const email = localStorage.getItem("resetEmail");
+
+//   // 🔒 Protect reset page access
+//   if (!email) {
+//     alert("Invalid access. Please verify OTP again.");
+//     window.location.href = "forgot.html";
+//     return; // ⛔ stop further execution
+//   }
+
+//   resetBtn.addEventListener("click", async (e) => {
+//     e.preventDefault();
+
+//     const password = newPassword.value.trim();
+//     const confirm = confirmPassword.value.trim();
+
+//     if (!password || !confirm)
+//       return alert("All fields are required");
+
+//     if (password.length < 6)
+//       return alert("Password must be at least 6 characters");
+
+//     if (password !== confirm)
+//       return alert("Passwords do not match");
+
+//     try {
+//       const { data } = await axios.post(
+//         "http://localhost:4001/user/reset-password",
+//         { email, password }
+//       );
+
+//       alert(data.message);
+
+//       localStorage.removeItem("resetEmail");
+//       window.location.href = "index.html";
+
+//     } catch (err) {
+//       alert(err.response?.data?.message || "Password reset failed");
+//     }
+//   });
+// }
+
+
+
+
+// ====================================================================================
+// OTP + RESET PASSWORD (PURE VANILLA JS — SAFE SINGLE FILE)
+// ====================================================================================
+
+// ======================
+// OTP PAGE ELEMENTS
+// ======================
+const otpBtn = document.querySelector("#otpBtn");
+const emailInput = document.querySelector("#emailInput");
+const otpSection = document.querySelector("#otpSection");
+const resendBtn = document.querySelector("#resendBtn");
+const timerEl = document.querySelector("#timer");
+const verifyBtn = document.querySelector("#verifyBtn");
+const otpInput = otpSection ? otpSection.querySelector("input") : null;
+
+let timerInterval;
+let timeLeft = 60;
+
+// ======================
+// SEND OTP
+// ======================
+if (otpBtn && emailInput && otpSection && verifyBtn) {
+
+  otpBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    if (!email) return alert("Email is required");
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4001/user/forgot",
+        { email }
+      );
+
+      alert(data.message);
+
+      otpSection.classList.remove("hidden");
+      otpBtn.classList.add("hidden");
+      verifyBtn.classList.remove("hidden");
+
+      startTimer();
+
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to send OTP");
+    }
+  });
+
+  verifyBtn.addEventListener("click", verifyOTP);
+}
+
+// ======================
+// VERIFY OTP
+// ======================
+async function verifyOTP(e) {
+  e.preventDefault();
+
+  if (!otpInput || !emailInput) return;
+
+  const email = emailInput.value.trim();
+  const otp = otpInput.value.trim();
+
+  if (!otp || otp.length !== 6) {
+    return alert("Enter a valid 6-digit OTP");
+  }
+
+  try {
+    const { data } = await axios.post(
+      "http://localhost:4001/user/verify-otp",
+      { email, otp }
+    );
+
+    alert(data.message);
+
+    localStorage.setItem("resetEmail", email);
+    window.location.href = "reset-password.html";
+
+  } catch (err) {
+    alert(err.response?.data?.message || "OTP verification failed");
+  }
+}
+
+// ======================
+// RESEND OTP
+// ======================
+if (resendBtn && emailInput) {
+  resendBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+
+    const email = emailInput.value.trim();
+    if (!email) return alert("Email is required");
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4001/user/forgot",
+        { email }
+      );
+
+      alert(data.message || "OTP resent");
+      startTimer();
+
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to resend OTP");
+    }
+  });
+}
+
+// ======================
+// TIMER LOGIC
+// ======================
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 60;
+
+  if (resendBtn) {
+    resendBtn.disabled = true;
+    resendBtn.classList.add("cursor-not-allowed");
+  }
+
+  if (timerEl) timerEl.textContent = timeLeft;
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+
+    if (timerEl) timerEl.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+
+      if (resendBtn) {
+        resendBtn.disabled = false;
+        resendBtn.classList.remove("cursor-not-allowed");
+      }
+
+      if (timerEl) timerEl.textContent = "0";
+    }
+  }, 1000);
+}
+
+
+// ====================================================================================
+// RESET PASSWORD PAGE (FORM-BASED — NO REFRESH)
+// ====================================================================================
+const resetForm = document.querySelector("#resetForm");
+const resetBtn = document.querySelector("#resetBtn");
+const newPassword = document.querySelector("#newPassword");
+const confirmPassword = document.querySelector("#confirmPassword");
+
+// ✅ Run ONLY on reset-password page
+if (resetForm && resetBtn && newPassword && confirmPassword) {
+
+  const email = localStorage.getItem("resetEmail");
+
+  // 🔒 Prevent direct access
+  if (!email) {
+    alert("Invalid access. Please verify OTP again.");
+    window.location.href = "forgot.html";
+  }
+
+  resetForm.addEventListener("submit", async (e) => {
+    e.preventDefault(); // ⛔ stop page refresh
+
+    const password = newPassword.value.trim();
+    const confirm = confirmPassword.value.trim();
+
+    if (!password || !confirm)
+      return alert("All fields are required");
+
+    if (password.length < 6)
+      return alert("Password must be at least 6 characters");
+
+    if (password !== confirm)
+      return alert("Passwords do not match");
+
+    try {
+      const { data } = await axios.post(
+        "http://localhost:4001/user/reset-password",
+        { email, newPassword: password }
+      );
+
+      alert(data.message);
+
+      localStorage.removeItem("resetEmail");
+      window.location.href = "index.html";
+
+    } catch (err) {
+      alert(err.response?.data?.message || "Password reset failed");
+    }
+  });
 }
