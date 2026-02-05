@@ -20,8 +20,12 @@ const userSchema = mongoose.Schema({
         trim: true,
         unique : true
     },
-    token:{
-        type: String
+    resetOTP: {
+        type: String,
+        select: false
+    },
+    resetOTPExpiry: {
+        type: Date
     }
 }, { timestamps:true });
 

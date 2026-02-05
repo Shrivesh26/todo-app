@@ -2,9 +2,11 @@
 module.exports = {
   content: [
     "./index.html",
-    "./login.html",
+    "./home.html",
     "./signup.html",
     "./pageNotFound.html",
+    "./forgotPwd.html",
+    "./reset-password.html",
     "./src/**/*.{js,html}"
   ],
   theme: {
