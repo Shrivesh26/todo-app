@@ -306,40 +306,50 @@ function showUnsuccessMessage(item, message, delay) {
 
 
 // ====================================================================================
+// ====================================================================================
 const loginBtn = document.querySelector("#login");
+
 if (loginBtn) {
-  loginBtn.addEventListener("click", (e) => {
+  loginBtn.addEventListener("click", async (e) => {
     e.preventDefault();
-    let emailLogin = document.querySelector("input[type='email']").value.trim();
-    let passwordLogin = document.querySelector("input[type='password']").value.trim();
+
+    const emailInput = document.querySelector("input[type='email']");
+    const passwordInput = document.querySelector("input[type='password']");
+    const rememberCheckbox  = document.getElementById("rememberMe");
+
+    const emailLogin = emailInput.value.trim();
+    const passwordLogin = passwordInput.value.trim();
+    const rememberMe = rememberCheckbox.checked;
 
     if (!emailLogin || !passwordLogin) {
       alert("All fields are required");
       return;
     }
-    login(emailLogin, passwordLogin);
 
-    emailLogin.value ="";
-    passwordLogin.value ="";
+    await login(emailLogin, passwordLogin, rememberMe);
+
+    // clear inputs AFTER login attempt
+    emailInput.value = "";
+    passwordInput.value = "";
+    rememberCheckbox.checked = false;
   });
 }
 
-async function login(email, password) {
+async function login(email, password, rememberMe) {
   try {
-    const {data} = await axios.post(
-      "http://localhost:4001/user/login",
-      { email : email, password: password },
-      { withCredentials: true }
-    );
-    console.log("frontend",data);
+    const { data } = await axios.post("http://localhost:4001/user/login",{ email, password, rememberMe},{withCredentials: true});
+    console.log("frontend", data);
     showSuccessMessage("Logged In", "Successfully", 2000, "home.html");
   } catch (error) {
     console.error("Login failed:", error.response?.data || error.message);
-    const msg = error?.response?.data?.message || error.message || "Login failed";
+    const msg =
+      error?.response?.data?.message ||
+      error.message ||
+      "Login failed";
+
     showUnsuccessMessage("Login failed", msg, 2000);
   }
 }
-
 
 
 // // ====================================================================================
