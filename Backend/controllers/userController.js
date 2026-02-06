@@ -48,7 +48,7 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, rememberMe } = req.body;
 
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -66,9 +66,11 @@ const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid password" });
     }
 
-    const token = await generateTokenAndSaveInCookies(user._id, res);
+    const token = await generateTokenAndSaveInCookies(user._id, res, rememberMe);
+    user.token = token;
+    await user.save();
 
-    return res.status(200).json({message: "Login success",user, token});
+    return res.status(200).json({message: "Login success", user, token});
 
   } catch (error) {
     res.status(500).json({ message: "Error logging in" });

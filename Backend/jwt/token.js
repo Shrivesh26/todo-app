@@ -1,18 +1,21 @@
 const jwt = require("jsonwebtoken");
-const User = require("../models/user.js");
 
-module.exports = async function generateTokenAndSaveInCookies(userId, res){
-    const token = jwt.sign({userId}, process.env.JWT_SECRET_KEY, {expiresIn:"10d"});
+module.exports = async function generateTokenAndSaveInCookies(userId, res, rememberMe) {
+  const expiresIn = rememberMe ? "30d" : "1h";
 
-    console.log("✅ Token generated:", token);
+  const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, { expiresIn });
 
-     res.cookie("jwt", token, {
-      httpOnly: true,
-      secure: false,
-      sameSite: "lax",
-      path: "/"
-    });
+  console.log("✅ Token generated:", token);
 
-    await User.findByIdAndUpdate(userId, { token });
-    return token;
-}
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    secure: false,
+    sameSite: "lax",
+    path: "/",
+    maxAge: rememberMe
+      ? 30 * 24 * 60 * 60 * 1000 // 30 days
+      : 60 * 60 * 1000          // 1 hour
+  });
+
+  return token;
+};

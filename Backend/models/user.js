@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const token = require("../jwt/token");
 
 const userSchema = mongoose.Schema({
     username:{
@@ -26,6 +27,9 @@ const userSchema = mongoose.Schema({
     },
     resetOTPExpiry: {
         type: Date
+    },
+    token: {
+        type: String
     }
 }, { timestamps:true });
 
